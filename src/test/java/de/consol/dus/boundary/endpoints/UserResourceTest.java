@@ -33,5 +33,11 @@ class UserResourceTest {
         .then()
             .statusCode(HttpStatus.SC_OK)
             .body(is("[" + jane + "]"));
+    given()
+        .pathParam("name", janeName)
+        .when().delete("/users/{name}")
+        .then()
+            .statusCode(HttpStatus.SC_OK)
+            .body(is(jane));
   }
 }
