@@ -9,7 +9,7 @@ import javax.ws.rs.core.MediaType;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 @Path("/api/fruit")
-@RegisterRestClient
+@RegisterRestClient(configKey = "fruit-rest")
 @Produces(MediaType.APPLICATION_JSON)
 public interface FruitRestClient {
 
