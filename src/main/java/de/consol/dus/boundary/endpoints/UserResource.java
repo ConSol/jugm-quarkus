@@ -11,7 +11,7 @@ public class UserResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public UserResponse hello() {
+    public UserResponse getSampleUser() {
         return UserResponse.builder()
             .name("John Doe")
             .email("john@Doe.com")
