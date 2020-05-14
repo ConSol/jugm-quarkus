@@ -11,4 +11,5 @@ public class FruitResponse {
   private String genus;
   private String name;
   private NutritionResponse nutritions;
+  private String comment;
 }

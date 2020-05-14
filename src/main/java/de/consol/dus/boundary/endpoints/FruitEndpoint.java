@@ -1,5 +1,6 @@
 package de.consol.dus.boundary.endpoints;
 
+import com.google.common.base.Objects;
 import de.consol.dus.boundary.responses.FruitResponse;
 import de.consol.dus.boundary.restclients.FruitRestClient;
 import javax.inject.Inject;
@@ -24,6 +25,10 @@ public class FruitEndpoint {
   @GET
   @Path("/{name}")
   public FruitResponse getFruitByName(@PathParam("name") String name) {
-      return restClient.getFruitByName(name);
+      FruitResponse response = restClient.getFruitByName(name);
+      if (Objects.equal("Ananas", response.getGenus())) {
+        response.setComment("Of course it belongs on pizza!");
+    }
+    return response;
   }
 }
