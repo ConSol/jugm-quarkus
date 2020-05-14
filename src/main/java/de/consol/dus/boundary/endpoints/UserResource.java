@@ -5,6 +5,7 @@ import de.consol.dus.boundary.mapper.UserMapper;
 import de.consol.dus.boundary.repositories.UserRepository;
 import de.consol.dus.boundary.requests.CreateUserRequest;
 import de.consol.dus.boundary.responses.UserResponse;
+import java.util.Collection;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
@@ -24,6 +25,11 @@ public class UserResource {
 
     private final UserRepository repository;
     private final UserMapper mapper;
+
+    @GET
+    public Collection<UserResponse> getAllUsers() {
+        return mapper.entitiesToResponses(repository.listAll());
+    }
 
     @GET
     @Path("{name}")
