@@ -6,6 +6,7 @@ import de.consol.dus.boundary.repositories.UserRepository;
 import de.consol.dus.boundary.requests.CreateUserRequest;
 import de.consol.dus.boundary.responses.UserResponse;
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -37,15 +38,12 @@ public class UserResource {
     @GET
     @Path("{name}")
     public UserResponse getUserByName(@PathParam("name") String name) {
-        return UserResponse.builder()
-            .name(name)
-            .email(DEFAULT_EMAIL)
-            .build();
+        return mapper.entityToResponse(repository.findByName(name).orElse(null));
     }
 
     @POST
     @Transactional
-    public UserResponse createUser(CreateUserRequest request) {
+    public UserResponse createUser(@Valid CreateUserRequest request) {
         UserEntity toSave = mapper.requestToEntity(request);
         repository.persist(toSave);
         return mapper.entityToResponse(toSave);
