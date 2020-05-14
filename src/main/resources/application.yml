@@ -5,3 +5,10 @@ quarkus:
     password: ${DB_PASSWORD:app_user}
     jdbc:
       url: ${DB_URL:jdbc:postgresql://localhost:15432/app_user}
+
+de:
+  consol:
+    dus:
+      boundary:
+        restclients:
+          FruitRestClient/mp-rest/url: http://www.fruityvice.com
