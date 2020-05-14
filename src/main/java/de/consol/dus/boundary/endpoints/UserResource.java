@@ -22,8 +22,6 @@ import lombok.AllArgsConstructor;
 @Produces(MediaType.APPLICATION_JSON)
 public class UserResource {
 
-    public static final String DEFAULT_EMAIL = "john@Doe.com";
-
     private final UserRepository repository;
     private final UserMapper mapper;
 
