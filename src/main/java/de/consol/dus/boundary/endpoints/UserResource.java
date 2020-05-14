@@ -28,14 +28,6 @@ public class UserResource {
     private final UserMapper mapper;
 
     @GET
-    public UserResponse getSampleUser() {
-        return UserResponse.builder()
-            .name("John Doe")
-            .email(DEFAULT_EMAIL)
-            .build();
-    }
-
-    @GET
     @Path("{name}")
     public UserResponse getUserByName(@PathParam("name") String name) {
         return mapper.entityToResponse(repository.findByName(name).orElse(null));
