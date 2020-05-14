@@ -40,4 +40,16 @@ class UserResourceTest {
             .statusCode(HttpStatus.SC_OK)
             .body(is(jane));
   }
+
+  @Test
+  public void testPostingUserWithNoNameShouldReturnBadREquest() {
+    String invalidUser = "{\"email\":\"jane@doe.com\"}";
+    given()
+        .header("Content-Type", MediaType.APPLICATION_JSON)
+        .body(invalidUser)
+        .when().post("/users")
+        .then()
+            .statusCode(HttpStatus.SC_BAD_REQUEST)
+            .body(is("{\"message\":\"Parameter name (=\\\"null\\\"): must not be null\\n\"}"));
+  }
 }
