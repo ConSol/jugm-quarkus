@@ -18,6 +18,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import lombok.AllArgsConstructor;
+import org.eclipse.microprofile.metrics.annotation.Counted;
+import org.eclipse.microprofile.metrics.annotation.Metered;
+import org.eclipse.microprofile.metrics.annotation.Timed;
 
 @AllArgsConstructor
 @Path("/users")
@@ -29,6 +32,9 @@ public class UserResource {
     private final UserMapper mapper;
 
     @GET
+    @Counted(name = "allUsersCounter", description = "How often all users have been fetched")
+    @Metered(name = "usersFetchedMeter", description = "Meter information for user fetching endpoint")
+    @Timed(name = "allUsersTimer", description = "How long it takes to to fetch all users.")
     public Collection<UserResponse> getAllUsers() {
         return mapper.entitiesToResponses(repository.listAll());
     }
@@ -40,6 +46,8 @@ public class UserResource {
     }
 
     @POST
+    @Counted(name = "createUserCounter", description = "How often a user has been created")
+    @Timed(name = "createUserTimer", description = "How long it has taken to create a user")
     @Transactional
     public UserResponse createUser(@Valid CreateUserRequest request) {
         UserEntity toSave = mapper.requestToEntity(request);
