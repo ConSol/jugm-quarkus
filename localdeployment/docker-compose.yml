@@ -1,5 +1,10 @@
 version: '3.7'
 services:
+  tracing-service:
+    image: jaegertracing/all-in-one@sha256:aa49be5a3c80f540aa25b26073f70da2bbd71a57dcaff8765c818e712d271ccf
+    ports:
+      - '14268:14268'
+      - '16686:16686'
   dbms-service:
     image: postgres:12.2@sha256:c52d4eac43883c53113cee0ebd1ce0fe53ef0604708822901ecca6655968fa9a
     volumes:

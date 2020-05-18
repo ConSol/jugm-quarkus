@@ -5,5 +5,11 @@ quarkus:
     password: ${DB_PASSWORD:app_user}
     jdbc:
       url: ${DB_URL:jdbc:postgresql://localhost:15432/app_user}
+  jaeger:
+    enabled: true
+    endpoint: ${TRACING_ENDPOINT:http://localhost:14268/api/traces}
+    sampler-type: const
+    sampler-param: 1
+    service-name: user-service
 
 fruit-rest/mp-rest/url: http://www.fruityvice.com

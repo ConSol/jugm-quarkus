@@ -13,12 +13,12 @@ import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 @Path("fruits")
 @Produces(MediaType.APPLICATION_JSON)
-public class FruitEndpoint {
+public class FruitResource {
 
   private final FruitRestClient restClient;
 
   @Inject
-  public FruitEndpoint(@RestClient FruitRestClient restClient) {
+  public FruitResource(@RestClient FruitRestClient restClient) {
     this.restClient = restClient;
   }
 
