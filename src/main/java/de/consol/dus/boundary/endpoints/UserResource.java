@@ -4,7 +4,9 @@ import de.consol.dus.boundary.entities.UserEntity;
 import de.consol.dus.boundary.mapper.UserMapper;
 import de.consol.dus.boundary.repositories.UserRepository;
 import de.consol.dus.boundary.requests.CreateUserRequest;
+import de.consol.dus.boundary.responses.FruitResponse;
 import de.consol.dus.boundary.responses.UserResponse;
+import de.consol.dus.boundary.restclients.FruitRestClient;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
@@ -28,6 +30,7 @@ import org.eclipse.microprofile.metrics.annotation.Gauge;
 import org.eclipse.microprofile.metrics.annotation.Metered;
 import org.eclipse.microprofile.metrics.annotation.RegistryType;
 import org.eclipse.microprofile.metrics.annotation.Timed;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 @Path("/users")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -36,6 +39,7 @@ public class UserResource {
 
     private final UserRepository repository;
     private final UserMapper mapper;
+    private final FruitRestClient restClient;
     private final MetricRegistry registry;
     private final AtomicLong userCounter = new AtomicLong(0L);
 
@@ -43,9 +47,11 @@ public class UserResource {
     public UserResource(
         UserRepository repository,
         UserMapper mapper,
+        @RestClient FruitRestClient restClient,
         @RegistryType(type = MetricRegistry.Type.APPLICATION) MetricRegistry registry) {
         this.repository = repository;
         this.mapper = mapper;
+        this.restClient = restClient;
         this.registry = registry;
     }
 
@@ -69,6 +75,7 @@ public class UserResource {
     @Transactional
     public UserResponse createUser(@Valid CreateUserRequest request) {
         UserEntity toSave = mapper.requestToEntity(request);
+        FruitResponse apple = restClient.getFruitByName("apple");
         repository.persist(toSave);
         Histogram histogram = getUserHistogram();
         histogram.update(userCounter.incrementAndGet());
