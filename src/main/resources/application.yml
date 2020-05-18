@@ -4,7 +4,10 @@ quarkus:
     username: ${DB_USER:app_user}
     password: ${DB_PASSWORD:app_user}
     jdbc:
-      url: ${DB_URL:jdbc:postgresql://localhost:15432/app_user}
+      url: ${DB_URL:jdbc:tracing:postgresql://localhost:15432/app_user}
+      driver: io.opentracing.contrib.jdbc.TracingDriver
+  hibernate-orm:
+    dialect: org.hibernate.dialect.PostgreSQLDialect
   jaeger:
     enabled: true
     endpoint: ${TRACING_ENDPOINT:http://localhost:14268/api/traces}
