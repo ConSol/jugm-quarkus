@@ -7,6 +7,8 @@ import de.consol.dus.boundary.requests.CreateUserRequest;
 import de.consol.dus.boundary.responses.UserResponse;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
+import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
@@ -17,12 +19,16 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import lombok.AllArgsConstructor;
+import org.eclipse.microprofile.metrics.Histogram;
+import org.eclipse.microprofile.metrics.Metadata;
+import org.eclipse.microprofile.metrics.MetricRegistry;
+import org.eclipse.microprofile.metrics.MetricType;
 import org.eclipse.microprofile.metrics.annotation.Counted;
+import org.eclipse.microprofile.metrics.annotation.Gauge;
 import org.eclipse.microprofile.metrics.annotation.Metered;
+import org.eclipse.microprofile.metrics.annotation.RegistryType;
 import org.eclipse.microprofile.metrics.annotation.Timed;
 
-@AllArgsConstructor
 @Path("/users")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
@@ -30,6 +36,18 @@ public class UserResource {
 
     private final UserRepository repository;
     private final UserMapper mapper;
+    private final MetricRegistry registry;
+    private final AtomicLong userCounter = new AtomicLong(0L);
+
+    @Inject
+    public UserResource(
+        UserRepository repository,
+        UserMapper mapper,
+        @RegistryType(type = MetricRegistry.Type.APPLICATION) MetricRegistry registry) {
+        this.repository = repository;
+        this.mapper = mapper;
+        this.registry = registry;
+    }
 
     @GET
     @Counted(name = "allUsersCounter", description = "How often all users have been fetched")
@@ -52,7 +70,18 @@ public class UserResource {
     public UserResponse createUser(@Valid CreateUserRequest request) {
         UserEntity toSave = mapper.requestToEntity(request);
         repository.persist(toSave);
+        Histogram histogram = getUserHistogram();
+        histogram.update(userCounter.incrementAndGet());
         return mapper.entityToResponse(toSave);
+    }
+
+    private Histogram getUserHistogram() {
+        Metadata metadata = Metadata.builder()
+            .withName("userHistogram")
+            .withDescription("Histogram of user count")
+            .withType(MetricType.HISTOGRAM)
+            .build();
+        return registry.histogram(metadata);
     }
 
     @DELETE
@@ -61,6 +90,12 @@ public class UserResource {
     public UserResponse deleteUserByName(@PathParam("name") String name) {
         Optional<UserEntity> fetched = repository.findByName(name);
         fetched.ifPresent(repository::delete);
+        getUserHistogram().update(userCounter.decrementAndGet());
         return mapper.entityToResponse(fetched.orElse(null));
+    }
+
+    @Gauge(name = "userGauge", unit = "Users", absolute = true)
+    public long userGauge() {
+        return userCounter.get();
     }
 }
