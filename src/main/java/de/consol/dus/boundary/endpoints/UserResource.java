@@ -10,6 +10,7 @@ import de.consol.dus.boundary.restclients.FruitRestClient;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -56,6 +57,7 @@ public class UserResource {
     }
 
     @GET
+    @RolesAllowed({ "admin" })
     @Counted(name = "allUsersCounter", description = "How often all users have been fetched")
     @Metered(name = "usersFetchedMeter", description = "Meter information for user fetching endpoint")
     @Timed(name = "allUsersTimer", description = "How long it takes to to fetch all users.")

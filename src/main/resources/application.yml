@@ -14,5 +14,9 @@ quarkus:
     sampler-type: const
     sampler-param: 1
     service-name: user-service
-
+  oauth2:
+    client-id: ${OAUTH2_CLIENT_ID:app-client}
+    client-secret: ${OAUTH2_CLIENT_SECRET:31a859f6-95f5-4f32-8403-0b2a3f36969e}
+    introspection-url: ${OAUTH2_INTROSPECT_ENDPOINT:http://localhost:8090/auth/realms/app/protocol/openid-connect/token/introspect}
+    role-claim: ${OAUTH2_ROLE_CLAIM:roles}
 fruit-rest/mp-rest/url: http://www.fruityvice.com
