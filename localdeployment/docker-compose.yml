@@ -15,7 +15,7 @@ services:
       - POSTGRES_DB=postgres
     ports:
       - '15432:5432'
-  oidc-service:
+  oauth2-service:
     image: jboss/keycloak:9.0.3@sha256:e327b52ed4dbdb1875250d6eaed803d7a5453d0ca3e8f2a35b662499293d684c
     volumes:
       - ./keycloak/app.json:/tmp/app.json
