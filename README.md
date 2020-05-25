@@ -135,6 +135,7 @@ Attention:
 
 Native compilation is extremely memory-intensive. The process can use well beyond 10 GB of RAM. If
 the OS starts swapping, the compilation may result in a system freeze.
+
 ---
 
 This will generate an executable `target/jugm-quarkus-0.0.1-SNAPSHOT-runner`. Starting this
